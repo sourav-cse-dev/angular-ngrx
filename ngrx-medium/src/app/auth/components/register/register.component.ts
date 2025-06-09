@@ -8,17 +8,26 @@ import {
 import { Store } from '@ngrx/store';
 import { register } from '../../store/auth.action';
 import { RegisterRequestInterface } from '../../types/register-request.interface';
+import { RouterLink } from '@angular/router';
+import { selectSubmitting } from '../../store/auth.selectors';
+import { AuthStateInterface } from '../../types/authState.interface';
+import { AsyncPipe, CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, RouterLink, CommonModule],
 })
 export class RegisterComponent implements OnInit {
   form!: FormGroup;
 
-  constructor(private fb: FormBuilder, private store: Store) {}
+  constructor(
+    private fb: FormBuilder,
+    private store: Store<{ auth: AuthStateInterface }>
+  ) {}
+
+  isSubmitting$!: ReturnType<Store<{ auth: AuthStateInterface }>['select']>;
 
   ngOnInit(): void {
     this.form = this.fb.nonNullable.group({
@@ -26,6 +35,8 @@ export class RegisterComponent implements OnInit {
       email: ['', Validators.email],
       password: ['', Validators.required],
     });
+
+    this.isSubmitting$ = this.store.select(selectSubmitting);
   }
 
   onSubmit() {

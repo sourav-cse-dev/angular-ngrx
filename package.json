@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@ngrx/store-devtools": "^19.2.1",
+    "@reduxjs/toolkit": "^2.8.2"
+  }
+}
